@@ -2,11 +2,13 @@ if (EPOLL_EXISTS)
     set(
             yolanda_lib
             log.c
+            read.c
     )
 else ()
     set(
             yolanda_lib
             log.c
+            read.c
     )
 endif ()
 

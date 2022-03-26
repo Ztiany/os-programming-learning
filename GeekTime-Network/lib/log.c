@@ -1,14 +1,8 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <errno.h>
-#include    <stdarg.h>        /* ANSI C header file */
-#include    <syslog.h>        /* for syslog() */
+
 #include "log.h"
 
 # define MAXLINE 4096
 
-/* error - print a diagnostic and optionally exit */
 void error(int status, int err, char *fmt, ...) {
     va_list ap;
 

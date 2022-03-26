@@ -16,7 +16,9 @@ int make_socket(uint16_t port) {
 
     /* 绑定到 port 和 ip. */
     name.sin_family = AF_INET; /* IPV4 */
+    //The htons() function converts the unsigned short integer hostshort from host byte order to network byte order.
     name.sin_port = htons(port);  /* 指定端口 */
+    // The htonl() function converts the unsigned integer hostlong from host byte order to network byte order.
     name.sin_addr.s_addr = htonl(INADDR_ANY); /* 通配地址，可以理解为 0.0.0.0 */
 
     /* 把 IPV4 地址转换成通用地址格式，同时传递长度 */

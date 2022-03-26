@@ -31,7 +31,10 @@ endif ()
 # 配置生成头文件
 #  CMAKE_CURRENT_BINARY_DIR 指的是工程编译结果存放的目标目录
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/include/config.h)
+# 包含生成的头文件
+include_directories(${CMAKE_CURRENT_BINARY_DIR}/include)
 
 add_subdirectory(lib/)
 add_subdirectory(chapter04/)
 add_subdirectory(chapter05/)
+add_subdirectory(chapter06/)

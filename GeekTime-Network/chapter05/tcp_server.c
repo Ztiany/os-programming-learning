@@ -4,10 +4,10 @@
 #include <netinet/in.h>
 #include <obstack.h>
 #include <unistd.h>
+#include "../lib/read.h"
 #include "../lib/log.h"
 
 void read_data(int);
-
 
 int main(int argc, char **argv) {
     //server 和 client fd
@@ -37,13 +37,12 @@ int main(int argc, char **argv) {
     }
     yolanda_msgx("bind success.");
 
-
     //开始监听，等待队列设置为 1024
     if (listen(server_fd, 1024) < 0) {
         perror("listen");
         exit(EXIT_FAILURE);
     }
-    yolanda_msgx("listen success.");
+    yolanda_msgx("server started success and listening on 12345.");
 
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "EndlessLoop"
@@ -58,5 +57,17 @@ int main(int argc, char **argv) {
 }
 
 void read_data(int client_fd) {
-
+    size_t read_size;
+    char buf[1024];
+    int time = 0;
+    for (;;) {
+        fprintf(stdout, "block in read\n");
+        read_size = readn(client_fd, buf, 1024);
+        if (read_size == 0) {
+            return;
+        }
+        time++;
+        fprintf(stdout, "1K read for %d \n", time);
+        usleep(1000);
+    }
 }
