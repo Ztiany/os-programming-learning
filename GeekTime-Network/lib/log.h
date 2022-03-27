@@ -29,8 +29,4 @@ void yolanda_msgx(const char *fmt, ...);
 
 void yolanda_debugx(const char *fmt, ...);
 
-#define LOG_MSG(msg) yolanda_log(LOG_MSG_TYPE, msg)
-
-#define LOG_ERR(msg) yolanda_log(LOG_ERR_TYPE, msg)
-
 #endif

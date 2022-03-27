@@ -10,27 +10,23 @@
 void read_data(int);
 
 int main(int argc, char **argv) {
-    //server 和 client fd
-    int server_fd, client_fd;
-    socklen_t client_len;
-    //server 和 client 地址
-    struct sockaddr_in server_addr, client_addr;
-
     //创建 server socket
-    server_fd = socket(PF_INET, SOCK_STREAM, 0);
+    int server_fd = socket(PF_INET, SOCK_STREAM, 0);
     if (server_fd < 0) {
         perror("socket");
         exit(EXIT_FAILURE);
     }
-    yolanda_msgx("socket success.");
+    yolanda_debugx("socket success.");
 
     //设置服务器地址
+    socklen_t client_len;
+    struct sockaddr_in server_addr;
     bzero(&server_addr, sizeof(server_addr));//erase the data of server_addr.
     server_addr.sin_family = AF_INET;
     server_addr.sin_addr.s_addr = htonl(INADDR_ANY);
-    server_addr.sin_port = htons(12345);
+    server_addr.sin_port = htons(12347);
 
-    //绑定到本地地址
+    //绑定 socket 到本地地址
     if (bind(server_fd, (struct sockaddr *) &server_addr, sizeof(server_addr)) < 0) {
         perror("bind");
         exit(EXIT_FAILURE);
@@ -44,16 +40,17 @@ int main(int argc, char **argv) {
     }
     yolanda_msgx("server started success and listening on 12345.");
 
-#pragma clang diagnostic push
-#pragma ide diagnostic ignored "EndlessLoop"
     /* 循环处理用户请求 */
     for (;;) {
-        client_fd = accept(server_fd, (struct sockaddr *) &client_addr, &client_len);
+        //客户端地址
+        struct sockaddr_in client_addr;
+        //接收客户端连接
+        int client_fd = accept(server_fd, (struct sockaddr *) &client_addr, &client_len);
+        //接收客户端数据
         read_data(client_fd);
-        /* 关闭连接套接字，注意不是监听套接字*/
+        // 关闭连接套接字，注意不是监听套接字
         close(client_fd);
     }
-#pragma clang diagnostic pop
 }
 
 void read_data(int client_fd) {
@@ -68,6 +65,8 @@ void read_data(int client_fd) {
         }
         time++;
         fprintf(stdout, "1K read for %d \n", time);
+
+        //休眠 1 秒，用来模拟服务器端处理时延。
         usleep(1000);
     }
 }
