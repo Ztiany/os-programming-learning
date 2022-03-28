@@ -1,4 +1,3 @@
-
 #include "log.h"
 
 # define MAXLINE 4096

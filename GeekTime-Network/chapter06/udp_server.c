@@ -48,23 +48,38 @@ int main(int argc, char **argv) {
     socklen_t client_addr_len = sizeof(client_addr);
 
     //收消息的缓冲区
-    char message[MAX_LINE];
+    char receive_buffer[BUFFER_SIZE];
+
     //发送消息缓冲区的长度
-    int send_size = sizeof("Hi, ") + MAX_LINE;
+    int send_size = sizeof("Hi, ") + BUFFER_SIZE;
+    char send_buffer[send_size];
+
     //收消息计数
     count = 0;
 
     for (;;) {
         //接收数据
         printf("start to receive\n");
-        size_t read_size = recvfrom(socket_fd, message, MAX_LINE, 0, TO_SOCK_ADDR(client_addr), &client_addr_len);
-        message[read_size] = 0;//最后一位置为 0，字符串结束标识。
-        printf("received %zu bytes: %s\n", read_size, message);
+        bzero(receive_buffer, sizeof(receive_buffer));
+        size_t read_size = recvfrom(
+                socket_fd,
+                receive_buffer,
+                BUFFER_SIZE,
+                0,
+                TO_SOCK_ADDR(client_addr),
+                &client_addr_len
+        );
+        if (read_size == BUFFER_SIZE) {
+            receive_buffer[read_size - 1] = '\0';//设置字符串结束标识。
+        } else {
+            receive_buffer[read_size] = '\0';//设置字符串结束标识。
+        }
+        printf("received %zu bytes: %s\n", read_size, receive_buffer);
 
         //将接收的数据发回去
-        char send_line[send_size];
-        sprintf(send_line, "Hi, %s", message);
-        sendto(socket_fd, send_line, strlen(send_line), 0, TO_SOCK_ADDR(client_addr), client_addr_len);
+        bzero(send_buffer, sizeof(send_buffer));
+        sprintf(send_buffer, "Hi, %s", receive_buffer);
+        sendto(socket_fd, send_buffer, strlen(send_buffer), 0, TO_SOCK_ADDR(client_addr), client_addr_len);
 
         //计数
         count++;

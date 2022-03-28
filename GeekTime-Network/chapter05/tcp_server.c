@@ -19,12 +19,11 @@ int main(int argc, char **argv) {
     yolanda_debugx("socket success.");
 
     //设置服务器地址
-    socklen_t client_len;
     struct sockaddr_in server_addr;
     bzero(&server_addr, sizeof(server_addr));//erase the data of server_addr.
     server_addr.sin_family = AF_INET;
     server_addr.sin_addr.s_addr = htonl(INADDR_ANY);
-    server_addr.sin_port = htons(12347);
+    server_addr.sin_port = htons(12345);
 
     //绑定 socket 到本地地址
     if (bind(server_fd, (struct sockaddr *) &server_addr, sizeof(server_addr)) < 0) {
@@ -44,6 +43,7 @@ int main(int argc, char **argv) {
     for (;;) {
         //客户端地址
         struct sockaddr_in client_addr;
+        socklen_t client_len;
         //接收客户端连接
         int client_fd = accept(server_fd, (struct sockaddr *) &client_addr, &client_len);
         //接收客户端数据
@@ -57,12 +57,15 @@ void read_data(int client_fd) {
     size_t read_size;
     char buf[1024];
     int time = 0;
+
     for (;;) {
         fprintf(stdout, "block in read\n");
-        read_size = readn(client_fd, buf, 1024);
+
+        read_size = readn(client_fd, buf, 1024);//readn 尝试从 fd 读取指定 size 的数据
         if (read_size == 0) {
             return;
         }
+
         time++;
         fprintf(stdout, "1K read for %d \n", time);
 

@@ -21,7 +21,7 @@ int main(int argc, char **argv) {
         error(1, errno, "socket failed ");
     }
 
-    //服务器目标地址，SERV_PORT 表示发送到所有网卡
+    //服务器目标地址，SERV_PORT 表示发送到所有网卡。
     struct sockaddr_in remote_addr;
     bzero(&remote_addr, sizeof(remote_addr));
     remote_addr.sin_port = htons(SERV_PORT);
@@ -36,20 +36,29 @@ int main(int argc, char **argv) {
     struct sockaddr *replay_addr;
     replay_addr = malloc(sizeof(remote_addr));
     socklen_t replay_addr_len;
-    char send_line[MAX_LINE], recv_line[MAX_LINE + 1];
 
-    //  Upon successful completion, fgets() shall return s. 如果 fgets() 会将读取到的 \n 放到 s 中。
+    //缓冲区
+    char send_line[MAX_LINE];
+    char recv_line[MAX_LINE + 1];
+
+    //  Upon successful completion, fgets() shall return s. 【如果 fgets() 读取到的 \n 则会将其放到 s 中】
     while (fgets(send_line, MAX_LINE, stdin) != NULL) {
         //准备数据【从控制台输入】
         size_t real_len = strlen(send_line);
         if (send_line[real_len - 1] == '\n') {
             send_line[real_len - 1] = 0;
         }
-        printf("now sending %s\n", send_line);
 
         //发送数据
-        size_t size_sent = sendto(client_fd, send_line, strlen(send_line), 0, TO_SOCK_ADDR(remote_addr),
-                                  sizeof(remote_addr));
+        printf("now sending %s\n", send_line);
+        size_t size_sent = sendto(
+                client_fd,
+                send_line,
+                real_len,
+                0,
+                TO_SOCK_ADDR(remote_addr),
+                sizeof(remote_addr)
+        );
         if (size_sent < 0) {
             error(1, errno, "send failed ");
         }
@@ -61,7 +70,7 @@ int main(int argc, char **argv) {
         if (received_len < 0) {
             error(1, errno, "recvfrom failed");
         }
-        recv_line[received_len] = 0;
+        recv_line[received_len] = 0;//最后一位置为 0，字符串结束标识。
 
         //输出接收到的数据
         fputs(recv_line, stdout);

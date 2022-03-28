@@ -22,7 +22,7 @@ int main(int argc, char **argv) {
     }
 
     bzero(&remote_addr, sizeof(remote_addr));
-    remote_addr.sin_port = htons(12346);
+    remote_addr.sin_port = htons(12345);
     remote_addr.sin_family = AF_INET;
     //convert IPv4 and IPv6 addresses from text to binary form. returns 1 on success (network address was successfully converted).
     int pton_result = inet_pton(AF_INET, argv[1], &remote_addr.sin_addr);
@@ -57,10 +57,12 @@ void send_data(int fd) {
     while (remaining) {
         size_t size_written = send(fd, cp, remaining, 0);
         fprintf(stdout, "send into buffer %zu \n", size_written);
+
         if (size_written <= 0) {
             error(1, errno, "send failed\n");
             return;
         }
+
         remaining -= size_written;
         cp += size_written;
     }
