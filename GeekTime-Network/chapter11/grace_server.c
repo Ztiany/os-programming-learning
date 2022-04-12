@@ -17,6 +17,9 @@ static void sig_int(int sig_no) {
 }
 
 int main(int argc, char **argv) {
+    NO_BUFFER(stdout)
+    NO_BUFFER(stderr)
+
     // 创建套接字
     int listen_fd = socket(AF_INET, SOCK_STREAM, 0);
     if (listen_fd < 0) {
@@ -42,7 +45,7 @@ int main(int argc, char **argv) {
 
     // 服务器端程序有一点需要注意，那就是对 SIGPIPE 这个信号的处理。
     signal(SIGINT, sig_int);
-    signal(SIGPIPE, SIG_DFL);
+    signal(SIGPIPE, SIG_IGN);// SIG_IGN 表示忽略信号
 
     // 接收客户端连接
     struct sockaddr_in client_addr;
