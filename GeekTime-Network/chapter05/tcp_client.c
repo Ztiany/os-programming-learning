@@ -9,6 +9,7 @@ void send_data(int);
 //1000M
 # define MESSAGE_SIZE 10240000
 
+/* 请设置运行参数为 127.0.0.1 */
 int main(int argc, char **argv) {
     int client_fd;
     struct sockaddr_in remote_addr;
