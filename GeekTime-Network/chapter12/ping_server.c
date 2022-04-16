@@ -7,6 +7,7 @@
 #include <signal.h>
 #include "../lib/common.h"
 #include "../lib/log.h"
+#include "message_protocol.h"
 
 static int count;
 
@@ -16,9 +17,13 @@ static void sig_int(int sig_no) {
     exit(0);
 }
 
+/* 请设置运行参数为一个数字，比如 5，则表示服务器收到 ping 后，睡眠 5 秒。*/
 int main(int argc, char **argv) {
-    NO_BUFFER(stdout)
-    NO_BUFFER(stderr)
+    if (argc != 2) {
+        error(1, 0, "usage: 12-ping-server <sleeping_time>");
+    }
+    //服务器睡眠时间，模拟时延
+    int sleeping_time = atoi(argv[1]);
 
     // 创建套接字
     int listen_fd = socket(AF_INET, SOCK_STREAM, 0);
@@ -55,34 +60,42 @@ int main(int argc, char **argv) {
         error(1, errno, "accept");
     }
 
-    //收消息的缓冲区
-    char receive_buffer[BUFFER_SIZE];
-
-    //发送消息缓冲区的长度
-    int send_size = sizeof("Hi, ") + BUFFER_SIZE;
-    char send_buffer[send_size];
-
-    //收消息计数
+    // 收消息计数
     count = 0;
+    // 消息
+    messageObject message;
+
     for (;;) {
         //读数据
-        bzero(receive_buffer, sizeof(receive_buffer));
-        size_t size_read = read(conn_fd, receive_buffer, MAX_LINE);
+        bzero(&message, sizeof(message));
+        size_t size_read = read(conn_fd, (char *) &message, MAX_LINE);
         if (size_read < 0) {
             error(1, errno, "read error");
         } else if (size_read == 0) {
             error(1, 0, "client closed.");
         }
-        yolanda_msgx("server received: %s", receive_buffer);
+        printf("received %zu bytes\n", size_read);
         count++;
 
-        //返回数据
-        bzero(send_buffer, sizeof(send_buffer));
-        sprintf(send_buffer, "Hi, %s", receive_buffer);
-        sleep(5); //注意，在发送之前，让服务器端程序休眠了 5 秒，以模拟服务器端处理的时间。
-        size_t size_write = write(conn_fd, send_buffer, strlen(send_buffer));
-        if (size_write < 0) {
-            error(1, errno, "write error");
+        switch (ntohl(message.type)) {
+            case MSG_PING:
+                printf("received ping\n");
+                messageObject pong_message;
+                pong_message.type = htonl(MSG_PONG);
+                sleep(sleeping_time);
+                ssize_t rc = send(conn_fd, (char *) &pong_message, sizeof(pong_message), 0);
+                if (rc < 0) {
+                    error(1, errno, "send failure");
+                }
+                break;
+            case MSG_TYPE1:
+                printf("process  MSG_TYPE1 \n");
+                break;
+            case MSG_TYPE2:
+                printf("process  MSG_TYPE2 \n");
+                break;
+            default:
+                error(1, 0, "unknown message type");
         }
     }
 
