@@ -3,12 +3,16 @@ if (EPOLL_EXISTS)
             yolanda_lib
             log.c
             read.c
+            tcp_server.c
+            tcp_client.c
     )
 else ()
     set(
             yolanda_lib
             log.c
             read.c
+            tcp_server.c
+            tcp_client.c
     )
 endif ()
 
