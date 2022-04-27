@@ -8,14 +8,14 @@
 
 int tcp_server_accept_one(int port) {
     // 创建套接字
-    int listen_fd = socket(AF_INET, SOCK_STREAM, 0);
-    if (listen_fd < 0) {
+    int server_fd = socket(AF_INET, SOCK_STREAM, 0);
+    if (server_fd < 0) {
         error(1, errno, "tcp_server socket() failed");
     }
 
     // 设置地址可重用
     int on = 1;
-    setsockopt(listen_fd, SOL_SOCKET, SO_REUSEADDR, &on, sizeof(on));
+    setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR, &on, sizeof(on));
 
     // 创建套接字地址
     struct sockaddr_in server_addr;
@@ -25,12 +25,12 @@ int tcp_server_accept_one(int port) {
     server_addr.sin_addr.s_addr = htonl(INADDR_ANY);
 
     // 绑定到本地
-    if (bind(listen_fd, TO_SOCK_ADDR(server_addr), sizeof(server_addr)) < 0) {
+    if (bind(server_fd, TO_SOCK_ADDR(server_addr), sizeof(server_addr)) < 0) {
         error(1, errno, "tcp_server bind() failed");
     }
 
     // 开始监听
-    if (listen(listen_fd, LISTEN_Q) < 0) {
+    if (listen(server_fd, LISTEN_Q) < 0) {
         error(1, errno, "tcp_server listen() failed");
     }
 
@@ -40,7 +40,7 @@ int tcp_server_accept_one(int port) {
     struct sockaddr_in client_addr;
     bzero(&client_addr, sizeof(client_addr));
     socklen_t client_addr_len = sizeof(client_addr);
-    int client_fd = accept(listen_fd, TO_SOCK_ADDR(client_addr), &client_addr_len);
+    int client_fd = accept(server_fd, TO_SOCK_ADDR(client_addr), &client_addr_len);
 
     if (client_fd < 0) {
         error(1, errno, "tcp_server accept() failed");

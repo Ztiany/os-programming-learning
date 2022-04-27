@@ -62,10 +62,10 @@ size_t read_message(int fd, char *buffer, size_t length) {
     return read_count;
 }
 
-size_t read_line1(int fd, char *buffer, size_t length) {
+size_t read_line(int fd, char *buffer, size_t length) {
     int count_up = 0;
     char c = '\0';
-    int read_result = 0;
+    int read_result;
 
     while ((count_up < length - 1/*为 \0 留一个位置*/) && (c != '\n')) {
         read_result = recv(fd, &c, 1, 0);
@@ -92,4 +92,45 @@ size_t read_line1(int fd, char *buffer, size_t length) {
     //最后不管是读到了换行符，还是读取了足够的长度，都在末尾加上一个结束符。
     buffer[count_up] = '\0';
     return count_up;
+}
+
+size_t read_line_buffered(int fd, char *buffer, size_t length) {
+    char *buffer_start = buffer;
+    static char *static_buffer_pointer;
+    int n_left = 0;
+    static char static_read_buffer[512];
+
+    while (--length > 0) {
+
+        //先读到全局缓冲区
+        if (n_left <= 0) {
+            int read_count = recv(fd, static_read_buffer, sizeof(static_read_buffer), 0);
+            //错误处理
+            if (read_count < 0) {
+                if (errno == EINTR) {
+                    length++;//补回
+                    continue;
+                }
+                return -1;
+            }
+            //对端关闭
+            if (read_count == 0) {
+                return 0;
+            }
+            static_buffer_pointer = static_read_buffer;
+            n_left = read_count;
+        }
+
+        //再移到目标缓冲区
+        char c = *static_buffer_pointer++;
+        *buffer++ = c;
+        n_left--;
+        if (c == '\n') {
+            *buffer = '\0';
+            return buffer - buffer_start;
+        }
+
+    }
+
+    return -1;
 }
