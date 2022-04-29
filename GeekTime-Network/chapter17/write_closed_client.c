@@ -35,7 +35,7 @@ int main(int argc, char **argv) {
         printf("write %d bytes\n", n_written);
 
         if (n_written <= 0) {
-            error(1, errno, "write error");
+            error(1, errno, "write error(%d)", errno);
             return EXIT_FAILURE;
         }
 

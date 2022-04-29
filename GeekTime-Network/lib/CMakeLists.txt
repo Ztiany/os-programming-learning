@@ -3,6 +3,7 @@ if (EPOLL_EXISTS)
             yolanda_lib
             log.c
             read.c
+            write.c
             tcp_server.c
             tcp_client.c
     )
@@ -11,6 +12,7 @@ else ()
             yolanda_lib
             log.c
             read.c
+            write.c
             tcp_server.c
             tcp_client.c
     )

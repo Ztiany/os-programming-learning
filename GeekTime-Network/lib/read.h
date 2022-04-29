@@ -25,7 +25,7 @@ size_t read_message(int fd, char *buffer, size_t length);
 /** 读取一行的数据【也就是读到 \\r, \\n 或者 \\r\\n 为止】，buffer 始终以 \0 结束，注意：该版本是逐个字节读取，效率较低。*/
 size_t read_line(int fd, char *buffer, size_t length);
 
-/** 读取一行的数据【也就是读到 \\r, \\n 或者 \\r\\n 为止】，buffer 始终以 \0 结束。*/
+/** 读取一行的数据【也就是读到 \\r, \\n 或者 \\r\\n 为止】，buffer 始终以 \0 结束。【TODO，完善实现】*/
 size_t read_line_buffered(int fd, char *buffer, size_t length);
 
 #endif //GEEKTIME_READ_H
