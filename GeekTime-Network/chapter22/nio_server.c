@@ -35,9 +35,9 @@ struct Buffer {
     int connect_fd;
     /**缓冲区*/
     char buffer[MAX_LINE];
-    /**缓冲区读取位置*/
+    /**指向缓冲区中已经被使用的区域的末尾。*/
     size_t write_index;
-    /**缓冲区写入位置*/
+    /**指向缓冲区中已经被消耗的区域的末尾【read_index <= write_index-1】*/
     size_t read_index;
     /**缓冲区是否可读【即缓冲区是否已经读入了数据】*/
     bool readable;
@@ -58,11 +58,14 @@ void delete_buffer(struct Buffer *buffer) {
     free(buffer);
 }
 
-int on_socket_readable(int index, struct Buffer *buffer);
+int on_socket_readable(int fd, struct Buffer *buffer);
 
-int on_socket_writeable(int index, struct Buffer *buffer);
+int on_socket_writeable(int fd, struct Buffer *buffer);
 
 int main(int argc, char **argv) {
+    NO_BUFFER(stdout)
+    NO_BUFFER(stderr)
+
     //创建初始化服务器【非阻塞模式】
     int server_fd = tcp_server_listen_non_blocking(SERV_PORT);
 
@@ -94,16 +97,22 @@ int main(int argc, char **argv) {
             if (buffers[i]->connect_fd > max_fd) {//找到最大的那个 fd
                 max_fd = buffers[i]->connect_fd;
             }
+            yolanda_msgx("set read_set for  client(%d)", buffers[i]->connect_fd);
             FD_SET(buffers[i]->connect_fd, &read_set);//设置对读感兴趣
             if (buffers[i]->readable) {//如果已经读入了数据，则需要回写到客户端，因此设置对写感兴趣
+                yolanda_msgx("set write_set for  client(%d)", buffers[i]->connect_fd);
                 FD_SET(buffers[i]->connect_fd, &write_set);
             }
         }
 
+        yolanda_msgx("max_fd = %d", max_fd);
+
         //执行 select
-        if (select(max_fd + 1, &read_set, &write_set, &exception_set, NULL) < 0) {
+        int selected = select(max_fd + 1, &read_set, &write_set, &exception_set, NULL);
+        if (selected < 0) {
             error(1, errno, "select error");
         }
+        yolanda_msgx("selected for %d", server_fd);
 
         //===================================
         // 处理服务端情况
@@ -125,6 +134,7 @@ int main(int argc, char **argv) {
                 close(connected_fd);
                 error(1, 0, "too many connections");
             } else {
+                yolanda_msgx("A new client(%d) has been accepted.", connected_fd);
                 make_nonblocking(connected_fd);//设置非阻塞 I/O
                 if (buffers[connected_fd]->connect_fd < 0) {
                     buffers[connected_fd]->connect_fd = connected_fd;
@@ -137,20 +147,24 @@ int main(int argc, char **argv) {
         //===================================
         // 处理客户端情况
         //===================================
-        for (int i = 0; i < max_fd; ++i) {
-            //过滤掉无效连接
+        for (int i = 0; i < max_fd + 1; ++i) {
+            //过滤掉服务端本身和无效连接
             int fd = buffers[i]->connect_fd;
-            if (fd < 0) {
+            if (fd < 0 || fd == server_fd) {
                 continue;
             }
+
             int result;
             if (FD_ISSET(fd, &read_set)) {
-                result = on_socket_readable(i, buffers[i]);
+                yolanda_msgx("invoke read for client(%d)", fd);
+                result = on_socket_readable(fd, buffers[i]);
             }
             if (FD_ISSET(fd, &write_set)) {
-                result = on_socket_writeable(i, buffers[i]);
+                yolanda_msgx("invoke write for client(%d)", fd);
+                result = on_socket_writeable(fd, buffers[i]);
             }
             if (result != 0) {
+                yolanda_msgx("A client(%d) has exited.", fd);
                 buffers[i]->connect_fd = -1;
                 close(fd);
             }
@@ -159,11 +173,68 @@ int main(int argc, char **argv) {
 
 }
 
-int on_socket_readable(int index, struct Buffer *buffer) {
 
-    return 1;
+int on_socket_readable(int fd, struct Buffer *buffer) {
+    char read_buffer[1024];
+    int read_count;
+
+    while (true) {
+        read_count = read(fd, read_buffer, sizeof(read_buffer));
+        yolanda_msgx("client(%d) read for %d.", fd, read_count);
+
+        if (read_count <= 0) {
+            break;
+        }
+
+        //逐个字符地把读到的数据放到缓冲区中
+        for (int i = 0; i < read_count; ++i) {
+            if (buffer->write_index < sizeof(buffer->buffer)) {//判断容量
+                buffer->buffer[buffer->write_index] = rot13_char(read_buffer[i]);
+                buffer->write_index++;
+            } else{
+                //这里其实有问题【TODO：会导致很多数据丢失，待后续优化】
+                yolanda_msgx("abandoned 1");
+            }
+            //如果读取了回车符，则认为 client 端发送结束，此时可以把编码后的数据回送给客户端。
+            if (read_buffer[i] == '\n') {
+                buffer->readable = true;
+            }
+        }
+    }
+
+    if (read_count == 0) {//对端已经关闭
+        return 1;//返回 1 表示退出该客户端
+    } else if (read_count < 0) {//出错
+        if (errno == EAGAIN) {//表示当前已经没有数据，等待下一次通知。
+            return 0;//返回 0 表示下次继续。
+        }
+        return -1;//返回 -1 表示退出该客户端。
+    }
+
+    return 0;//返回 0 表示下次继续。
 }
 
-int on_socket_writeable(int index, struct Buffer *buffer) {
-    return 1;
+int on_socket_writeable(int fd, struct Buffer *buffer) {
+    int write_size;
+    while (buffer->read_index < buffer->write_index) {
+        write_size = send(fd, buffer->buffer + buffer->read_index, buffer->write_index - buffer->read_index, 0);
+        yolanda_msgx("client(%d) write for %d bytes.", fd, write_size);
+
+        if (write_size < 0) {
+            if (errno == EAGAIN) {
+                return 0;//返回 0 表示下次再来。
+            }
+            return -1;
+        }
+        buffer->read_index += write_size;
+    }
+
+    //缓冲区中读取的所有数据都已经回写完到客户端了
+    if (buffer->read_index == buffer->write_index) {
+        yolanda_msgx("client(%d) write all it buffer for %d bytes.", fd, write_size);
+        buffer->write_index = buffer->read_index = 0;
+        buffer->readable = false;
+    }
+
+    return 0;
 }

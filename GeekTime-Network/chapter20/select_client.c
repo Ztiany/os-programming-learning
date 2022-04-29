@@ -14,6 +14,9 @@
 
 /* 请设置运行参数为 127.0.0.1 */
 int main(int argc, char **argv) {
+    NO_BUFFER(stdout)
+    NO_BUFFER(stderr)
+
     if (argc != 2) {
         error(1, 0, "usage: 20-select-example <IPaddress>");
     }
