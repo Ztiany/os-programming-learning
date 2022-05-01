@@ -6,6 +6,7 @@ if (EPOLL_EXISTS)
             write.c
             tcp_server.c
             tcp_client.c
+            chars.c
     )
 else ()
     set(
@@ -15,6 +16,7 @@ else ()
             write.c
             tcp_server.c
             tcp_client.c
+            chars.h
     )
 endif ()
 
