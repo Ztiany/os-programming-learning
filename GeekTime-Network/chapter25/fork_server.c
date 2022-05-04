@@ -63,13 +63,13 @@ int main(int argc, char **argv) {
 }
 
 void child_run(int fd) {
-    char receive_buf[MAX_LINE];
-    char receive;
+    char output_buf[MAX_LINE];
+    char received_char;
     int read_count;
     size_t out_buf_used = 0;
 
     while (true) {
-        read_count = recv(fd, &receive, 1, 0);
+        read_count = recv(fd, &received_char, 1, 0);
         if (read_count == 0) {
             break;
         }
@@ -79,12 +79,12 @@ void child_run(int fd) {
         }
 
         /* We do this test to keep the user from overflowing the buffer. */
-        if (out_buf_used < sizeof(receive_buf)) {
-            receive_buf[out_buf_used++] = rot13_char(receive);
+        if (out_buf_used < sizeof(output_buf)) {
+            output_buf[out_buf_used++] = rot13_char(received_char);
         }
 
-        if (receive == '\n') {
-            send(fd, receive_buf, out_buf_used, 0);
+        if (received_char == '\n') {
+            send(fd, output_buf, out_buf_used, 0);
             out_buf_used = 0;
             continue;
         }

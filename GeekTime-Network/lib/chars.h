@@ -12,4 +12,4 @@
 
 char rot13_char(char c);
 
-#endif; //GEEKTIME_CHARS_H
+#endif //GEEKTIME_CHARS_H
