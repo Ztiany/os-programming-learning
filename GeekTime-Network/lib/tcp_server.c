@@ -51,7 +51,7 @@ int tcp_server_accept_one(int port) {
 }
 
 int tcp_server_listen(int port) {
-// 创建套接字
+    // 创建套接字
     int server_fd = socket(AF_INET, SOCK_STREAM, 0);
     if (server_fd < 0) {
         error(1, errno, "tcp_server socket() failed");

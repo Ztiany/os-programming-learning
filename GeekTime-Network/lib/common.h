@@ -22,6 +22,7 @@
 #define TO_SOCK_ADDR(addr) (struct sockaddr *)(&addr)
 #define P_TO_SOCK_ADDR(addr_p) (struct sockaddr *)(addr_p)
 
+/** make the fd nonblocking.*/
 void make_nonblocking(int fd);
 
 // 远程调试时，写入到 stdout 和 stderr 中的数据可能会保存在缓冲区中，导致客户端没有输出，通过下面的宏定义，可以让缓冲区不工作。
