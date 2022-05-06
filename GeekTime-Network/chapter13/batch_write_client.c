@@ -4,7 +4,6 @@
 #include <sys/uio.h>
 #include "../lib/common.h"
 #include "../lib/log.h"
-#include "lib/read.h"
 
 /*
  * 1. 请设置运行参数为 127.0.0.1

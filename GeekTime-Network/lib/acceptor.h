@@ -1,3 +1,12 @@
+/*
+ ============================================================================
+
+ Author      : Ztiany
+ Description : NIO + 多路复用服务器：TCP Server Factory.
+
+ ============================================================================
+ */
+
 #ifndef GEEKTIME_ACCEPTOR_H
 #define GEEKTIME_ACCEPTOR_H
 
