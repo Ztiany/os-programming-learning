@@ -19,6 +19,7 @@ set(
 )
 
 if (EPOLL_EXISTS)
+    MESSAGE("include epoll")
     list(APPEND ${yolanda_lib} event_dispatcher_epoll.c)
 endif ()
 
