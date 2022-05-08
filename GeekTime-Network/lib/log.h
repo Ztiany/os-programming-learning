@@ -24,9 +24,9 @@ void error(int status, int err, char *fmt, ...);
 void yolanda_log(int severity, const char *msg);
 
 void yolanda_logx(int severity, const char *errstr, const char *fmt, va_list ap);
-
-void yolanda_msgx(const char *fmt, ...);
-
 void yolanda_debugx(const char *fmt, ...);
+void yolanda_msgx(const char *fmt, ...);
+void yolanda_warnx(const char *fmt, ...);
+void yolanda_errorx(const char *fmt, ...);
 
 #endif

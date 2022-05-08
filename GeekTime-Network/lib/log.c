@@ -15,7 +15,6 @@ void error(int status, int err, char *fmt, ...) {
         exit(status);
 }
 
-
 static void err_doit(int errnoflag, int level, const char *fmt, va_list ap) {
     int errno_save, n;
     char buf[MAXLINE + 1];
@@ -33,7 +32,6 @@ static void err_doit(int errnoflag, int level, const char *fmt, va_list ap) {
     fputs(buf, stderr);
     fflush(stderr);
 }
-
 
 void yolanda_log(int severity, const char *msg) {
     const char *severity_str;
@@ -57,7 +55,6 @@ void yolanda_log(int severity, const char *msg) {
     fprintf(stdout, "[%s] %s\n", severity_str, msg);
 }
 
-
 void yolanda_logx(int severity, const char *errstr, const char *fmt, va_list ap) {
     char buf[1024];
     size_t len;
@@ -77,7 +74,6 @@ void yolanda_logx(int severity, const char *errstr, const char *fmt, va_list ap)
     yolanda_log(severity, buf);
 }
 
-
 void yolanda_msgx(const char *fmt, ...) {
     va_list ap;
 
@@ -86,11 +82,26 @@ void yolanda_msgx(const char *fmt, ...) {
     va_end(ap);
 }
 
-
 void yolanda_debugx(const char *fmt, ...) {
     va_list ap;
 
     va_start(ap, fmt);
     yolanda_logx(LOG_DEBUG_TYPE, NULL, fmt, ap);
+    va_end(ap);
+}
+
+void yolanda_warnx(const char *fmt, ...) {
+    va_list ap;
+
+    va_start(ap, fmt);
+    yolanda_logx(LOG_WARN_TYPE, NULL, fmt, ap);
+    va_end(ap);
+}
+
+void yolanda_errorx(const char *fmt, ...) {
+    va_list ap;
+
+    va_start(ap, fmt);
+    yolanda_logx(LOG_ERR_TYPE, NULL, fmt, ap);
     va_end(ap);
 }

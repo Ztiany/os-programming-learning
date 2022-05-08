@@ -1,7 +1,3 @@
-//
-// Created by Alien on 2022/5/6.
-//
-
 #ifndef GEEKTIME_TCP_CONNECTION_H
 #define GEEKTIME_TCP_CONNECTION_H
 

@@ -31,7 +31,7 @@ struct channel {
     event_read_callback on_channel_readable;
     event_write_callback on_channel_writeable;
 
-    /** callback data, 可能是 event_loop, tcp_server 或者 tcp_connection. */
+    /** 调用 event_read_callback/event_write_callback 时传递的数据，可能是 event_loop, tcp_server 或者 tcp_connection. */
     void *data;
 };
 
@@ -46,6 +46,9 @@ struct channel *channel_new(
 
 /** 释放 channel */
 void channel_free(struct channel *channel);
+
+/** 该 channel 是否可写*/
+bool channel_event_is_readable(struct channel *channel);
 
 /** 该 channel 是否可写*/
 bool channel_event_is_writeable(struct channel *channel);
