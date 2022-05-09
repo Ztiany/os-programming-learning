@@ -7,8 +7,8 @@
  ============================================================================
  */
 
-#ifndef GEEKTIME_BUTTER_H
-#define GEEKTIME_BUTTER_H
+#ifndef GEEKTIME_BUFFER_H
+#define GEEKTIME_BUFFER_H
 
 // 64k
 #define INIT_BUFFER_SIZE 65536
@@ -61,4 +61,4 @@ char buffer_read_char(struct buffer *buffer);
 /** 返回一个指针，该指针指向缓冲区中第一个 \\r\\n 所在位置，找不到则返回 NULL */
 char *buffer_find_CRLF(struct buffer *buffer);
 
-#endif //GEEKTIME_BUTTER_H
+#endif //GEEKTIME_BUFFER_H

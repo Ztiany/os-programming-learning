@@ -2,7 +2,7 @@
 #include <stdbool.h>
 #include <string.h>
 #include <sys/uio.h>
-#include "butter.h"
+#include "buffer.h"
 
 const char *CRLF = "\r\n";
 

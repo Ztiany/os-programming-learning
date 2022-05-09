@@ -7,7 +7,7 @@ set(
         tcp_client.c
         chars.c
         acceptor.c
-        butter.c
+        buffer.c
         channel.c
         channel_map.c
         event_dispatcher_poll.c
