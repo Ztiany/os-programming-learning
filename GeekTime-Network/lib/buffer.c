@@ -114,7 +114,7 @@ int buffer_socket_read(struct buffer *buffer, int socket_fd) {
     //读取数据时，只用到了 buffer。
     if (read_size <= maximum_writeable) {
         buffer->write_index += read_size;
-    } else {//读取数据时，buffer 被独满，且还用用到了额外的空间。
+    } else {//读取数据时，buffer 被读满，且还用用到了额外的空间。
         buffer->write_index = buffer->total_size;
         buffer_append(buffer, additional_buffer, read_size - maximum_writeable);
     }

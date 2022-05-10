@@ -14,6 +14,7 @@
 #include "acceptor.h"
 #include "thread_pool.h"
 #include "tcp_server.h"
+#include "buffer.h"
 
 /** 创建一个 TCP Server，并接收一个 TCP Client，返回 Client 的 fd。*/
 int tcp_server_accept_one(int port);
@@ -48,6 +49,7 @@ typedef int(*connection_closed_call_back)(struct tcp_connection *connection);
 struct tcp_server {
     /** 监听的端口 */
     int port;
+
     /** 处理该 server 的循环器*/
     struct event_loop *loop;
 

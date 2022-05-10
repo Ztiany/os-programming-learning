@@ -19,6 +19,7 @@ struct channel *channel_new(
     channel->on_channel_readable = read_callback;
     channel->on_channel_writeable = write_callback;
     channel->data = data;
+
     return channel;
 }
 

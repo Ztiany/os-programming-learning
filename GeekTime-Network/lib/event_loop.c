@@ -80,12 +80,14 @@ int event_loop_handle_pending_add(struct event_loop *loop, int fd, struct channe
     //------------------------------------------------------------
     //step1：如果需要，扩容映射空间
     struct channel_map *map = loop->channel_map;
+
     if (fd >= map->length) {
         if (!channel_map_make_space(map, fd, sizeof(struct channel *)/*这里是 channel 指针，而不是 channel 本身*/)) {
             return -1;
         }
     }
-    //step1：如果没有添加过，就添加到映射中，并注册 channel 的事件。
+
+    //step2：如果没有添加过，就添加到映射中，并注册 channel 的事件。
     if (map->entities[fd] == NULL) {
         map->entities[fd] = channel;
         //向 dispatcher 注册 channel 感兴趣的事件
@@ -228,7 +230,7 @@ struct event_loop *event_loop_init_with_name(const char *thread_name) {
 
     //名称
     if (thread_name == NULL) {
-        loop->thread_name = "main thread";
+        loop->thread_name = "main";
     } else {
         loop->thread_name = thread_name;
     }
@@ -283,7 +285,7 @@ int event_loop_run(struct event_loop *loop) {
 
     //超时时间
     struct timeval time_out;
-    time_out.tv_sec = 1;
+    time_out.tv_sec = 5;
 
     //开启循环
     while (!loop->quit) {

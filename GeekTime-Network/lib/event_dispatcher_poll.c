@@ -93,7 +93,8 @@ static int poll_delete(struct event_loop *loop, struct channel *channel) {
     if (deleted) {
         yolanda_msgx("poll-dispatcher deleted channel(fd=%d) in thread(%s)", fd, loop->thread_name);
     } else {
-        yolanda_errorx("poll-dispatcher tried to delete channel(fd=%d) in thread(%s), but not found.", fd, loop->thread_name);
+        yolanda_errorx("poll-dispatcher tried to delete channel(fd=%d) in thread(%s), but not found.", fd,
+                       loop->thread_name);
     }
 
     return 1;
@@ -127,7 +128,8 @@ static int poll_update(struct event_loop *loop, struct channel *channel) {
     if (updated) {
         yolanda_msgx("poll-dispatcher updated channel(fd=%d) in thread(%s)", fd, loop->thread_name);
     } else {
-        yolanda_errorx("poll-dispatcher tried to update channel(fd=%d) in thread(%s), but not found.", fd, loop->thread_name);
+        yolanda_errorx("poll-dispatcher tried to update channel(fd=%d) in thread(%s), but not found.", fd,
+                       loop->thread_name);
     }
 
     return 1;
@@ -135,7 +137,7 @@ static int poll_update(struct event_loop *loop, struct channel *channel) {
 
 /** 在该 event_dispatcher 上等待事件，并进行分发【比如调用 select 方法】*/
 static int poll_dispatch(struct event_loop *loop, struct timeval *timeout) {
-    yolanda_msgx("thread(%s) do dispatch at poll-dispatcher", loop->thread_name);
+    //yolanda_msgx("thread(%s) do dispatch at poll-dispatcher", loop->thread_name);
     //获取事件集
     struct poll_dispatcher_data *data = (struct poll_dispatcher_data *) loop->dispatcher_data;
 
@@ -155,30 +157,41 @@ static int poll_dispatch(struct event_loop *loop, struct timeval *timeout) {
     for (int i = 0; i < INIT_POLL_SIZE; ++i) {
         //TODO：优化避免栈空间分配
         struct pollfd poll_fd = data->event_set[i];
+        socket_fd = poll_fd.fd;
 
         //过滤掉空的 fd
-        if ((socket_fd = poll_fd.fd) < 0) {
+        if (socket_fd < 0) {
             continue;
         }
+
         //根据 revents 分发事件
         if (poll_fd.revents > 0) {
             //TODO：处理 POLLERR 事件
             //分发可读事件
             if (poll_fd.revents & POLLRDNORM) {
-                yolanda_msgx("poll-dispatcher dispatch READ EVENT to channel(fd=%d) in thread(%s)", socket_fd, loop->thread_name);
+                yolanda_msgx(
+                        "poll-dispatcher dispatch READ EVENT to channel(fd=%d) in thread(%s)",
+                        socket_fd,
+                        loop->thread_name
+                );
                 event_loop_active(loop, socket_fd, EVENT_READ);
             }
             //分发可写事件
             if (poll_fd.revents & POLLWRNORM) {
-                yolanda_msgx("poll-dispatcher dispatch WRITE EVENT to channel(fd=%d) in thread(%s)", socket_fd, loop->thread_name);
+                yolanda_msgx(
+                        "poll-dispatcher dispatch WRITE EVENT to channel(fd=%d) in thread(%s)",
+                        socket_fd,
+                        loop->thread_name
+                );
                 event_loop_active(loop, socket_fd, EVENT_WRITE);
+            }
+
+            //处理完了就直接结束，不需要遍历整个集合。
+            if (--ready_number <= 0) {
+                break;
             }
         }
 
-        //处理完了就直接结束，不需要遍历整个集合。
-        if (--ready_number <= 0) {
-            break;
-        }
     }
 
     return 1;
