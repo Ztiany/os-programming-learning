@@ -10,18 +10,19 @@ set(
         buffer.c
         channel.c
         channel_map.c
-        event_dispatcher_poll.c
         event_loop.c
         event_loop_thread.c
         tcp_connection.c
         thread_pool.c
         utils.c
+        event_dispatcher_poll.c
+        event_dispatcher_epoll.c
 )
 
-if (EPOLL_EXISTS)
-    MESSAGE("include epoll")
-    list(APPEND ${yolanda_lib} event_dispatcher_epoll.c)
-endif ()
+#if (EPOLL_EXISTS)
+#    MESSAGE("include epoll")
+#    list(APPEND ${yolanda_lib} event_dispatcher_epoll.c)
+#endif ()
 
 add_library(yolanda ${yolanda_lib})
 target_link_libraries(yolanda pthread)
