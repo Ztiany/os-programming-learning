@@ -27,7 +27,7 @@ struct poll_dispatcher_data {
 };
 
 /** 初始化 dispatcher */
-static void *poll_init(struct event_loop *event_loop) {
+static void *poll_init(struct event_loop *loop) {
     struct poll_dispatcher_data *data = malloc(sizeof(struct poll_dispatcher_data));
 
     //初始化 pollfd 数组，这个数组的第一个元素是 server_fd，其余的用来记录将要连接的 client_fd。

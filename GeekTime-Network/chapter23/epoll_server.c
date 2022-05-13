@@ -31,7 +31,6 @@ int main(int argc, char **argv) {
         error(1, errno, "epoll_create1 failed");
     }
 
-
     //设置 epoll 事件
     event.data.fd = server_fd;
     event.events = EPOLLIN | EPOLLET;//edge-triggered
