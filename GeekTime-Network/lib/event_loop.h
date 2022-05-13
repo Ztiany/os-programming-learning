@@ -14,6 +14,7 @@
 #define SOCKET_PAIR_READ 1
 
 extern const struct event_dispatcher poll_event_dispatcher;
+extern const struct event_dispatcher epoll_event_dispatcher;
 
 /** channel 节点，用以支持 event_loop 中采用链表存储 channel */
 struct channel_node {

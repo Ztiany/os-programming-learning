@@ -19,6 +19,7 @@ set(
         event_dispatcher_epoll.c
 )
 
+# Clion 的 bug，识别不到下面方式添加的 event_dispatcher_epoll。
 #if (EPOLL_EXISTS)
 #    MESSAGE("include epoll")
 #    list(APPEND ${yolanda_lib} event_dispatcher_epoll.c)

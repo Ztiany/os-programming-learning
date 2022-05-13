@@ -22,12 +22,16 @@ check_symbol_exists(epoll_create "sys/epoll.h" EPOLL_EXISTS)
 if (EPOLL_EXISTS)
     MESSAGE("epoll is available")
     # Linux下设置为 epoll
-    # set(EPOLL_ENABLE 1 CACHE INTERNAL "enable epoll")
+    set(EPOLL_ENABLE 1 CACHE INTERNAL "enable epoll")
     # Linux下设置为 poll【测试用】
-    set(EPOLL_ENABLE "" CACHE INTERNAL "not enable epoll")
+    # set(EPOLL_ENABLE "" CACHE INTERNAL "not enable epoll")
 else ()
     MESSAGE("epoll is not available")
     set(EPOLL_ENABLE "" CACHE INTERNAL "not enable epoll")
+endif ()
+
+if (EPOLL_ENABLE)
+    MESSAGE("epoll is enabled")
 endif ()
 
 # 配置生成头文件

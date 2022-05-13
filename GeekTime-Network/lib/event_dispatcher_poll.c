@@ -137,7 +137,6 @@ static int poll_update(struct event_loop *loop, struct channel *channel) {
 
 /** 在该 event_dispatcher 上等待事件，并进行分发【比如调用 select 方法】*/
 static int poll_dispatch(struct event_loop *loop, struct timeval *timeout) {
-    //yolanda_msgx("thread(%s) do dispatch at poll-dispatcher", loop->thread_name);
     //获取事件集
     struct poll_dispatcher_data *data = (struct poll_dispatcher_data *) loop->dispatcher_data;
 

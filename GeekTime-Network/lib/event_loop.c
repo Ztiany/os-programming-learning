@@ -4,6 +4,7 @@
 #include "event_dispatcher.h"
 #include "log.h"
 #include "utils.h"
+#include "config.h"
 
 //=============================================
 // 线程间通讯
@@ -244,7 +245,8 @@ struct event_loop *event_loop_init_with_name(const char *thread_name) {
 
     //事件分发器
 #ifdef EPOLL_ENABLE
-    yolanda_msgx("set epoll as event dispatcher for thread(%s)", event_loop->thread_name);
+    yolanda_msgx("set epoll as event dispatcher for thread(%s)", loop->thread_name);
+    loop->dispatcher = &epoll_event_dispatcher;
 #else
     yolanda_msgx("set poll as event dispatcher for thread(%s)", loop->thread_name);
     loop->dispatcher = &poll_event_dispatcher;
