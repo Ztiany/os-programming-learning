@@ -1,7 +1,7 @@
 # 指定 CMake 版本
 cmake_minimum_required(VERSION 3.10)
 # 指定项目名称
-project(GeekTime C CXX)
+project(GeekTime-Network C CXX)
 
 # 指定 C/C++ 标准
 set(CMAKE_CXX_STANDARD 11)
