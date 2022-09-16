@@ -38,6 +38,6 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config.h.cmake ${CMAKE_CURRENT_BINARY
 include_directories(${CMAKE_CURRENT_BINARY_DIR}/include)
 
 add_subdirectory(lib/)
-add_subdirectory(chapter10/)
-add_subdirectory(chapter15/)
+add_subdirectory(ipc/)
+add_subdirectory(signal/)
 

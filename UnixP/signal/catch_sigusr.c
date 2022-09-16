@@ -5,7 +5,9 @@
 //【程序 10-2：捕捉 SIGUSR1 和 SIGUSR2 的简单程序】
 //=================================================
 
-#include    <lib/apue.h>
+#include <stdio.h>
+#include <unistd.h>
+#include <signal.h>
 
 static void sig_usr(int);    /* one handler for both signals */
 
@@ -14,10 +16,10 @@ int main(void) {
     fflush(stdout);
 
     if (signal(SIGUSR1, sig_usr) == SIG_ERR)
-        err_sys("can't catch SIGUSR1");
+        printf("can't catch SIGUSR1\n");
 
     if (signal(SIGUSR2, sig_usr) == SIG_ERR)
-        err_sys("can't catch SIGUSR2");
+        printf("can't catch SIGUSR2\n");
 
     for (;;)
         pause();
@@ -30,7 +32,7 @@ static void sig_usr(int sig_no) {
     else if (sig_no == SIGUSR2)
         printf("received SIGUSR2\n");
     else
-        err_dump("received signal %d\n", sig_no);
+        printf("received signal %d\n", sig_no);
 }
 
 #pragma clang diagnostic pop
