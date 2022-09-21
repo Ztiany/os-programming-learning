@@ -8,13 +8,18 @@
 * any warranty. See the file COPYING for details.                      *
 \**********************************************************************/
 
-/* curr_time.h
+/* pty_fork.h
 
-   Header file for curr_time.c.
+   Header file for pty_fork.c.
 */
-#ifndef CURR_TIME_H
-#define CURR_TIME_H             /* Prevent accidental double inclusion */
+#ifndef FORK_PTY_H
+#define FORK_PTY_H
 
-char *currTime(const char *fmt);
+#include <termios.h>
+#include <sys/ioctl.h>
+#include <sys/types.h>
+
+pid_t ptyFork(int *masterFd, char *slaveName, size_t snLen,
+        const struct termios *slaveTermios, const struct winsize *slaveWS);
 
 #endif

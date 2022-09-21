@@ -8,13 +8,27 @@
 * any warranty. See the file COPYING for details.                      *
 \**********************************************************************/
 
-/* curr_time.h
+/* alt_functions.h
 
-   Header file for curr_time.c.
+   Header file for alt_functions.c.
 */
-#ifndef CURR_TIME_H
-#define CURR_TIME_H             /* Prevent accidental double inclusion */
+#ifndef ALT_FUNCTIONS_H
+#define ALT_FUNCTIONS_H         /* Prevent accidental double inclusion */
 
-char *currTime(const char *fmt);
+#if defined(__osf__) || defined(__hpux) || defined(_AIX) || \
+        defined(__sgi) || defined(__APPLE__)
+#define strsignal(sig) ALT_strsignal(sig)
+#endif
+char *ALT_strsignal(int sig);
+
+#if defined(__hpux) || defined(__osf__)
+#define hstrerror(err) ALT_hstrerror(err)
+#endif
+char *ALT_hstrerror(int sig);
+
+#if defined(__hpux) || defined(__osf__)
+#define posix_openpt(flags) ALT_posix_openpt(flags)
+#endif
+int ALT_posix_openpt(int flags);
 
 #endif

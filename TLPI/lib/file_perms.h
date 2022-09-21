@@ -8,13 +8,18 @@
 * any warranty. See the file COPYING for details.                      *
 \**********************************************************************/
 
-/* curr_time.h
+/* file_perms.h
 
-   Header file for curr_time.c.
+   Header file for file_perms.c.
 */
-#ifndef CURR_TIME_H
-#define CURR_TIME_H             /* Prevent accidental double inclusion */
+#ifndef FILE_PERMS_H
+#define FILE_PERMS_H
 
-char *currTime(const char *fmt);
+#include <sys/types.h>
+
+#define FP_SPECIAL 1            /* Include set-user-ID, set-group-ID, and sticky
+                                   bit information in returned string */
+
+char *filePermStr(mode_t perm, int flags);
 
 #endif

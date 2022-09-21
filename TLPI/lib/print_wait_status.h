@@ -8,13 +8,13 @@
 * any warranty. See the file COPYING for details.                      *
 \**********************************************************************/
 
-/* curr_time.h
+/* print_wait_status.h
 
-   Header file for curr_time.c.
+   Header file for print_wait_status.c.
 */
-#ifndef CURR_TIME_H
-#define CURR_TIME_H             /* Prevent accidental double inclusion */
+#ifndef PRINT_WAIT_STATUS_H     /* Prevent accidental double inclusion */
+#define PRINT_WAIT_STATUS_H
 
-char *currTime(const char *fmt);
+void printWaitStatus(const char *msg, int status);
 
 #endif

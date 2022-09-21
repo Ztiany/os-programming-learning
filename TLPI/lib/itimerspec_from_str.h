@@ -8,13 +8,15 @@
 * any warranty. See the file COPYING for details.                      *
 \**********************************************************************/
 
-/* curr_time.h
+/* itimerspec_from_str.h
 
-   Header file for curr_time.c.
+   Header file for itimerspec_from_str.c.
 */
-#ifndef CURR_TIME_H
-#define CURR_TIME_H             /* Prevent accidental double inclusion */
+#ifndef ITIMERSPEC_FROM_STR_H
+#define ITIMERSPEC_FROM_STR_H
 
-char *currTime(const char *fmt);
+#include <time.h>
+
+void itimerspecFromStr(char *str, struct itimerspec *tsp);
 
 #endif

@@ -8,13 +8,17 @@
 * any warranty. See the file COPYING for details.                      *
 \**********************************************************************/
 
-/* curr_time.h
+/* rdwrn.h
 
-   Header file for curr_time.c.
+   Header file for rdwrn.c.
 */
-#ifndef CURR_TIME_H
-#define CURR_TIME_H             /* Prevent accidental double inclusion */
+#ifndef RDWRN_H
+#define RDWRN_H
 
-char *currTime(const char *fmt);
+#include <sys/types.h>
+
+ssize_t readn(int fd, void *buf, size_t len);
+
+ssize_t writen(int fd, const void *buf, size_t len);
 
 #endif

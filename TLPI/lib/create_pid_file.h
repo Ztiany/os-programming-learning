@@ -8,13 +8,15 @@
 * any warranty. See the file COPYING for details.                      *
 \**********************************************************************/
 
-/* curr_time.h
+/* create_pid_file.h
 
-   Header file for curr_time.c.
+   Header file for create_pid_file.c.
 */
-#ifndef CURR_TIME_H
-#define CURR_TIME_H             /* Prevent accidental double inclusion */
+#ifndef CREATE_PID_FILE_H   /* Prevent accidental double inclusion */
+#define CREATE_PID_FILE_H
 
-char *currTime(const char *fmt);
+#define CPF_CLOEXEC 1
+
+int createPidFile(const char *progName, const char *pidFile, int flags);
 
 #endif

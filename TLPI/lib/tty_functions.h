@@ -8,13 +8,17 @@
 * any warranty. See the file COPYING for details.                      *
 \**********************************************************************/
 
-/* curr_time.h
+/* tty_functions.h
 
-   Header file for curr_time.c.
+   Header file for tty_functions.c.
 */
-#ifndef CURR_TIME_H
-#define CURR_TIME_H             /* Prevent accidental double inclusion */
+#ifndef TTY_FUNCTIONS_H
+#define TTY_FUNCTIONS_H
 
-char *currTime(const char *fmt);
+#include <termios.h>
+
+int ttySetCbreak(int fd, struct termios *prevTermios);
+
+int ttySetRaw(int fd, struct termios *prevTermios);
 
 #endif

@@ -8,13 +8,20 @@
 * any warranty. See the file COPYING for details.                      *
 \**********************************************************************/
 
-/* curr_time.h
+/* signal_functions.h
 
-   Header file for curr_time.c.
+   Header file for signal_functions.c.
 */
-#ifndef CURR_TIME_H
-#define CURR_TIME_H             /* Prevent accidental double inclusion */
+#ifndef SIGNAL_FUNCTIONS_H
+#define SIGNAL_FUNCTIONS_H
 
-char *currTime(const char *fmt);
+#include <signal.h>
+#include "tlpi_hdr.h"
+
+int printSigMask(FILE *of, const char *msg);
+
+int printPendingSigs(FILE *of, const char *msg);
+
+void printSigset(FILE *of, const char *ldr, const sigset_t *mask);
 
 #endif

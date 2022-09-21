@@ -8,13 +8,15 @@
 * any warranty. See the file COPYING for details.                      *
 \**********************************************************************/
 
-/* curr_time.h
+/* pty_open.h
 
-   Header file for curr_time.c.
+   Header file for pty_open.c (and pty_master_open_bsd.c).
 */
-#ifndef CURR_TIME_H
-#define CURR_TIME_H             /* Prevent accidental double inclusion */
+#ifndef PTY_MASTER_OPEN_H
+#define PTY_MASTER_OPEN_H
 
-char *currTime(const char *fmt);
+#include <sys/types.h>
+
+int ptyMasterOpen(char *slaveName, size_t snLen);
 
 #endif

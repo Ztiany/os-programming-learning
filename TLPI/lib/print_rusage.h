@@ -8,13 +8,15 @@
 * any warranty. See the file COPYING for details.                      *
 \**********************************************************************/
 
-/* curr_time.h
+/* print_rusage.h
 
-   Header file for curr_time.c.
+   Header file for print_rusage.c.
 */
-#ifndef CURR_TIME_H
-#define CURR_TIME_H             /* Prevent accidental double inclusion */
+#ifndef PRINT_RUSAGE_H      /* Prevent accidental double inclusion */
+#define PRINT_RUSAGE_H
 
-char *currTime(const char *fmt);
+#include <sys/resource.h>
+
+void printRusage(const char *leader, const struct rusage *ru);
 
 #endif

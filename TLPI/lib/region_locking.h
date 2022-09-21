@@ -8,13 +8,19 @@
 * any warranty. See the file COPYING for details.                      *
 \**********************************************************************/
 
-/* curr_time.h
+/* region_locking.h
 
-   Header file for curr_time.c.
+   Header file for region_locking.c.
 */
-#ifndef CURR_TIME_H
-#define CURR_TIME_H             /* Prevent accidental double inclusion */
+#ifndef REGION_LOCKING_H
+#define REGION_LOCKING_H
 
-char *currTime(const char *fmt);
+#include <sys/types.h>
+
+int lockRegion(int fd, int type, int whence, int start, int len);
+
+int lockRegionWait(int fd, int type, int whence, int start, int len);
+
+pid_t regionIsLocked(int fd, int type, int whence, int start, int len);
 
 #endif

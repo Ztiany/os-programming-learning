@@ -8,13 +8,15 @@
 * any warranty. See the file COPYING for details.                      *
 \**********************************************************************/
 
-/* curr_time.h
+/* read_line.h
 
-   Header file for curr_time.c.
+   Header file for read_line.c.
 */
-#ifndef CURR_TIME_H
-#define CURR_TIME_H             /* Prevent accidental double inclusion */
+#ifndef READ_LINE_H
+#define READ_LINE_H
 
-char *currTime(const char *fmt);
+#include <sys/types.h>
+
+ssize_t readLine(int fd, void *buffer, size_t n);
 
 #endif

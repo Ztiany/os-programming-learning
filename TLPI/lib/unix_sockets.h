@@ -8,13 +8,22 @@
 * any warranty. See the file COPYING for details.                      *
 \**********************************************************************/
 
-/* curr_time.h
+/* unix_sockets.h
 
-   Header file for curr_time.c.
+   Header file for unix_sockets.c.
 */
-#ifndef CURR_TIME_H
-#define CURR_TIME_H             /* Prevent accidental double inclusion */
+#ifndef UNIX_SOCKETS_H
+#define UNIX_SOCKETS_H      /* Prevent accidental double inclusion */
 
-char *currTime(const char *fmt);
+#include <sys/socket.h>
+#include <sys/un.h>
+
+int unixBuildAddress(const char *path, struct sockaddr_un *addr);
+
+int unixConnect(const char *path, int type);
+
+int unixListen(const char *path, int backlog);
+
+int unixBind(const char *path, int type);
 
 #endif
