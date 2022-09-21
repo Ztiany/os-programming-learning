@@ -12,3 +12,6 @@ target_link_libraries(ipc_sem_s_sample public_lib)
 
 add_executable(ipc_sem_sample sysv_sem_sample.cpp)
 target_link_libraries(ipc_sem_sample public_lib)
+
+add_executable(ipc_sem_init sysv_sm_init.c)
+target_link_libraries(ipc_sem_init public_lib)
