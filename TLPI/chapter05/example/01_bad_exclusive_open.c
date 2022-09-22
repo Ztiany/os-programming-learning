@@ -9,7 +9,7 @@
 
 #include <fcntl.h>
 #include <sys/stat.h>
-#include "tlpi_hdr.h"
+#include <lib/tlpi_hdr.h>
 
 /*
  * 使用步骤：

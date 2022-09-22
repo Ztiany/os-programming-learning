@@ -41,6 +41,7 @@ bool SimpleTwoSemaphore::init(key_t key) {
                 perror("init 1 semget()");
                 return false;
             }
+            printf("semget success, sem_id = %d\n", sem_id);
 
             // 信号灯创建成功后，还需要把它初始化成可用的状态。
             union semun sem_union;

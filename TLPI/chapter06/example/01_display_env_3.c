@@ -7,7 +7,7 @@
  */
 
 
-#include "tlpi_hdr.h"
+#include <lib/tlpi_hdr.h>
 
 //define _GNU_SOURCE to get it from <unistd.h>
 //https://stackoverflow.com/questions/5582211/what-does-define-gnu-source-imply
