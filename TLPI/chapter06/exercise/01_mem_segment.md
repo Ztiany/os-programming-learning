@@ -9,8 +9,7 @@
 char globBuf[65536];            /* 未初始化数据段 */
 int primes[] = { 2, 3, 5, 7 };  /* 初始化数据段 */
 
-static int
-square(int x)                   /* 在 square() 函数的栈帧中分配  */
+static int square(int x)                   /* 在 square() 函数的栈帧中分配  */
 {
     int result;                 /* 在 square() 函数的栈帧中分配 */
 
@@ -18,8 +17,7 @@ square(int x)                   /* 在 square() 函数的栈帧中分配  */
     return result;              /* 返回值通过寄存器传递 */
 }
 
-static void
-doCalc(int val)                 /* 在 doCalc() 函数的栈帧中分配 */
+static void doCalc(int val)                 /* 在 doCalc() 函数的栈帧中分配 */
 {
     printf("The square of %d is %d\n", val, square(val));
 
@@ -31,8 +29,7 @@ doCalc(int val)                 /* 在 doCalc() 函数的栈帧中分配 */
     }
 }
 
-int
-main(int argc, char *argv[])    /* 在 main() 函数的栈帧中分配 */
+int main(int argc, char *argv[])    /* 在 main() 函数的栈帧中分配 */
 {
     static int key = 9973;      /* 初始化数据段 */
     static char mbuf[10240000]; /* 未初始化数据段 */

@@ -1,12 +1,12 @@
-#include <sys/sem.h>
-#include <sys/stat.h>
-#include <lib/semun.h> /* Definition of semun union */
-#include <lib/tlpi_hdr.h>
-
 /*==================================================================================================
  由于 System V 的信号量的创建与初始化是分开的，存在竞争条件，因此需要通过一定手段来保证安全地初始化信号量。
  下面是一个安全初始化信号量的示范。
  ================================================================================================== */
+
+#include <sys/sem.h>
+#include <sys/stat.h>
+#include <lib/semun.h> /* Definition of semun union */
+#include <lib/tlpi_hdr.h>
 
 int main(int argc, char *argv[]) {
     int semid, key, perms;
