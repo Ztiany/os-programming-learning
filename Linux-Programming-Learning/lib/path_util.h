@@ -6,4 +6,4 @@ int getPwd(char *pwd, int length);
 
 void printPwd();
 
-#endif //ATMOSPHERE_PATH_UTIL_H
+#endif

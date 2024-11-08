@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(UnixP)
+project(Linux-Programming-Learning)
 
 # 指定 C/C++ 标准
 set(CMAKE_CXX_STANDARD 14)
@@ -39,5 +39,5 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR}/include)
 
 add_subdirectory(lib/)
 add_subdirectory(ipc/)
+add_subdirectory(mmap/)
 add_subdirectory(signal/)
-
