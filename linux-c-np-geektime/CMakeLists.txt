@@ -1,7 +1,7 @@
 # 指定 CMake 版本
 cmake_minimum_required(VERSION 3.10)
 # 指定项目名称
-project(GeekTime-Network C CXX)
+project(linux-c-np-geektime C CXX)
 
 # 指定 C/C++ 标准
 set(CMAKE_CXX_STANDARD 11)
@@ -13,7 +13,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/bin)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib)
 
-# 包含 GeekTime-Network 项目目录下的所有的头文件
+# 包含 linux-c-np-geektime 项目目录下的所有的头文件
 include_directories(${PROJECT_SOURCE_DIR})
 
 # check epoll and add config.h for the macro compilation
