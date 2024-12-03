@@ -1,2 +1,0 @@
-add_executable(mmap_usage mmap_usage.c)
-target_link_libraries(mmap_usage public_lib)
